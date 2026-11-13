@@ -1,0 +1,12 @@
+# Build output
+bin/
+obj/
+
+# Rider / IDE
+.idea/
+.vs/
+*.user
+*.suo
+
+# macOS
+.DS_Store
