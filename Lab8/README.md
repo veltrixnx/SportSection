@@ -29,3 +29,6 @@
 | `PrintAthleteSummaryTable` | масиви назв і значень | нічого (`void`) | Друкує зведену таблицю з підсумками. |
 
 Кількість рядків і стовпців зведеної таблиці обмежена 1–20, щоб уникнути надмірного розміру вводу.
+## Як розкладено меню на методи
+
+`Main` керує циклом і вибором пункту меню. `ShowMenu` показує меню, а `ShowAbout` виводить довідку. `ShowTrainingCostTable` збирає параметри таблиці; `PrintTrainingCostTable(start, end, step)` виводить її та викликає `CalculateTrainingCost`. `ShowAthleteSummaryTable` збирає дані, а `PrintAthleteSummaryTable` друкує таблицю з підсумками. `ReadDouble` і `ReadInt` перевіряють числове введення, а `Pause` чекає Enter і очищує консоль.
