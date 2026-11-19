@@ -153,8 +153,23 @@ internal static class Program
             Console.WriteLine($"{ids[i],4}  {names[i].PadRight(nameWidth)}  {birthYears[i],5}  {sportIds[i],10}  {ranks[i].PadRight(rankWidth)}  {joinedDates[i]:dd.MM.yyyy}  {trainings[i],10}");
         }
         Console.WriteLine($"Записів: {count}.");
+        Console.WriteLine("Розподіл за віковими групами (приблизний вік: поточний рік мінус рік народження):");
+        Console.WriteLine($"До 12 років: {CountAgeGroup(birthYears, count, DateTime.Today.Year, 0, 11)}");
+        Console.WriteLine($"12–17 років: {CountAgeGroup(birthYears, count, DateTime.Today.Year, 12, 17)}");
+        Console.WriteLine($"18 років і старші: {CountAgeGroup(birthYears, count, DateTime.Today.Year, 18, int.MaxValue)}");
     }
 
+    // Повертає кількість для однієї групи, нічого не виводячи на екран.
+    private static int CountAgeGroup(int[] birthYears, int count, int currentYear, int minimumAge, int maximumAge)
+    {
+        int total = 0;
+        for (int i = 0; i < count; i++)
+        {
+            int age = currentYear - birthYears[i];
+            if (age >= minimumAge && age <= maximumAge) total++;
+        }
+        return total;
+    }
 
     private static bool ReadText(string prompt, out string value)
     {
