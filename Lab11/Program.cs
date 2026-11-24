@@ -36,6 +36,15 @@ internal static class Program
                 case "2":
                     AddAthlete(ids, names, birthYears, sportIds, ranks, joinedDates, trainings, ref count, ref nextId);
                     break;
+                case "3":
+                    SearchAthletes(ids, names, birthYears, sportIds, ranks, joinedDates, trainings, count);
+                    break;
+                case "4":
+                    EditAthlete(ids, names, birthYears, sportIds, ranks, joinedDates, trainings, count);
+                    break;
+                case "5":
+                    DeleteAthlete(ids, names, birthYears, sportIds, ranks, joinedDates, trainings, ref count);
+                    break;
                 case "10":
                     AddExamples(ids, names, birthYears, sportIds, ranks, joinedDates, trainings, ref count, ref nextId);
                     break;
@@ -173,6 +182,198 @@ internal static class Program
         return -1;
     }
 
+    private static void SearchAthletes(int[] ids, string[] names, int[] birthYears, int[] sportIds,
+        string[] ranks, DateTime[] joinedDates, int[] trainings, int count)
+    {
+        if (count == 0)
+        {
+            Console.WriteLine("Сховище порожнє: шукати нічого.");
+            return;
+        }
+
+        Console.WriteLine("1 — Пошук за частиною імені чи прізвища");
+        Console.WriteLine("2 — Пошук за діапазоном років народження");
+        Console.WriteLine("0 — Повернутися до меню");
+        Console.Write("Ваш вибір: ");
+        string? choice = Console.ReadLine()?.Trim();
+        if (choice == null || choice == "0") return;
+
+        if (choice == "1")
+        {
+            string? query;
+            while (true)
+            {
+                Console.Write("Частина імені чи прізвища: ");
+                query = Console.ReadLine();
+                if (query == null) return;
+                query = query.Trim();
+                if (query.Length > 0) break;
+                Console.WriteLine("Помилка: введіть непорожній текст.");
+            }
+            PrintSearchResults(ids, names, birthYears, sportIds, ranks, joinedDates, trainings,
+                count, query, 0, 0, true);
+        }
+        else if (choice == "2")
+        {
+            if (!ReadInt("Рік народження від: ", 1900, DateTime.Today.Year, out int from) ||
+                !ReadInt("Рік народження до: ", 1900, DateTime.Today.Year, out int to)) return;
+            if (from > to)
+            {
+                Console.WriteLine("Помилка: нижня межа не може бути більшою за верхню.");
+                return;
+            }
+            PrintSearchResults(ids, names, birthYears, sportIds, ranks, joinedDates, trainings,
+                count, string.Empty, from, to, false);
+        }
+        else Console.WriteLine("Помилка: виберіть 1, 2 або 0.");
+    }
+
+    private static void PrintSearchResults(int[] ids, string[] names, int[] birthYears, int[] sportIds,
+        string[] ranks, DateTime[] joinedDates, int[] trainings, int count,
+        string query, int from, int to, bool byName)
+    {
+        int nameWidth = "Прізвище та ім'я".Length;
+        int rankWidth = "Розряд".Length;
+        for (int i = 0; i < count; i++)
+        {
+            if (names[i].Length > nameWidth) nameWidth = names[i].Length;
+            if (ranks[i].Length > rankWidth) rankWidth = ranks[i].Length;
+        }
+        int found = 0;
+        for (int i = 0; i < count; i++)
+        {
+            // Contains у цій роботі чутливий до регістру.
+            bool matches = byName ? names[i].Contains(query) : birthYears[i] >= from && birthYears[i] <= to;
+            if (!matches) continue;
+            if (found == 0)
+                Console.WriteLine($"\n{"№",4}  {"Прізвище та ім'я".PadRight(nameWidth)}  {"Рік",5}  {"Спорт",10}  {"Розряд".PadRight(rankWidth)}  {"Вступ",10}  {"Трен./тиж.",10}");
+            Console.WriteLine($"{ids[i],4}  {names[i].PadRight(nameWidth)}  {birthYears[i],5}  {sportIds[i],10}  {ranks[i].PadRight(rankWidth)}  {joinedDates[i]:dd.MM.yyyy}  {trainings[i],10}");
+            found++;
+        }
+        if (found == 0) Console.WriteLine("Записів за цією умовою не знайдено.");
+        else Console.WriteLine($"Знайдено записів: {found}.");
+    }
+
+    private static void EditAthlete(int[] ids, string[] names, int[] birthYears, int[] sportIds,
+        string[] ranks, DateTime[] joinedDates, int[] trainings, int count)
+    {
+        if (count == 0)
+        {
+            Console.WriteLine("Сховище порожнє: змінювати нічого.");
+            return;
+        }
+        if (!ReadInt("Номер вихованця для зміни: ", 1, int.MaxValue, out int id)) return;
+        int index = FindIndexById(ids, count, id);
+        if (index == -1)
+        {
+            Console.WriteLine($"Вихованця №{id} не знайдено.");
+            return;
+        }
+
+        Console.WriteLine("Нові значення (порожній Enter залишає поточне). Номер змінити не можна.");
+        // Спочатку перевіряємо всі поля, щоб переривання вводу не змінило запис частково.
+        if (!ReadOptionalText("Прізвище та ім'я", names[index], out string name) ||
+            !ReadOptionalInt("Рік народження", birthYears[index], 1900, DateTime.Today.Year, out int year) ||
+            !ReadOptionalInt("Код виду спорту", sportIds[index], 1, int.MaxValue, out int sportId) ||
+            !ReadOptionalText("Спортивний розряд", ranks[index], out string rank) ||
+            !ReadOptionalDate(joinedDates[index], year, out DateTime joined) ||
+            !ReadOptionalInt("Тренувань на тиждень", trainings[index], 0, 28, out int trainingCount))
+        {
+            Console.WriteLine("Введення перервано; запис не змінено.");
+            return;
+        }
+        names[index] = name;
+        birthYears[index] = year;
+        sportIds[index] = sportId;
+        ranks[index] = rank;
+        joinedDates[index] = joined;
+        trainings[index] = trainingCount;
+        Console.WriteLine($"Запис №{id} змінено.");
+    }
+
+    private static bool ReadOptionalText(string label, string current, out string value)
+    {
+        while (true)
+        {
+            Console.Write($"{label} [{current}]: ");
+            string? input = Console.ReadLine();
+            if (input == null) { value = current; return false; }
+            input = input.Trim();
+            if (input.Length == 0) { value = current; return true; }
+            if (input.Length >= 2) { value = input; return true; }
+            Console.WriteLine("Помилка: введіть щонайменше два символи або натисніть Enter.");
+        }
+    }
+
+    private static bool ReadOptionalInt(string label, int current, int min, int max, out int value)
+    {
+        while (true)
+        {
+            Console.Write($"{label} [{current}]: ");
+            string? input = Console.ReadLine();
+            if (input == null) { value = current; return false; }
+            input = input.Trim();
+            if (input.Length == 0) { value = current; return true; }
+            if (int.TryParse(input, out value) && value >= min && value <= max) return true;
+            Console.WriteLine($"Помилка: введіть ціле число від {min} до {max} або натисніть Enter.");
+        }
+    }
+
+    private static bool ReadOptionalDate(DateTime current, int birthYear, out DateTime value)
+    {
+        while (true)
+        {
+            Console.Write($"Дата вступу [{current:dd.MM.yyyy}]: ");
+            string? input = Console.ReadLine();
+            if (input == null) { value = current; return false; }
+            input = input.Trim();
+            if (input.Length == 0)
+            {
+                if (current.Year >= birthYear) { value = current; return true; }
+                Console.WriteLine("Поточна дата вступу раніша за новий рік народження; введіть іншу дату.");
+                continue;
+            }
+            if (DateTime.TryParseExact(input, "dd.MM.yyyy", CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out value) && value.Date <= DateTime.Today && value.Year >= birthYear) return true;
+            Console.WriteLine("Помилка: введіть дійсну дату дд.мм.рррр, не пізніше сьогодні і не раніше року народження.");
+        }
+    }
+
+    private static void DeleteAthlete(int[] ids, string[] names, int[] birthYears, int[] sportIds,
+        string[] ranks, DateTime[] joinedDates, int[] trainings, ref int count)
+    {
+        if (count == 0)
+        {
+            Console.WriteLine("Сховище порожнє: видаляти нічого.");
+            return;
+        }
+        if (!ReadInt("Номер вихованця для видалення: ", 1, int.MaxValue, out int id)) return;
+        int index = FindIndexById(ids, count, id);
+        if (index == -1)
+        {
+            Console.WriteLine($"Вихованця №{id} не знайдено.");
+            return;
+        }
+        Console.Write($"Видалити вихованця №{id} ({names[index]})? (так/ні): ");
+        if (!string.Equals(Console.ReadLine()?.Trim(), "так", StringComparison.OrdinalIgnoreCase))
+        {
+            Console.WriteLine("Видалення скасовано.");
+            return;
+        }
+        // Усі поля кожного наступного запису зсуваємо на один спільний індекс вліво.
+        for (int i = index; i < count - 1; i++)
+        {
+            ids[i] = ids[i + 1];
+            names[i] = names[i + 1];
+            birthYears[i] = birthYears[i + 1];
+            sportIds[i] = sportIds[i + 1];
+            ranks[i] = ranks[i + 1];
+            joinedDates[i] = joinedDates[i + 1];
+            trainings[i] = trainings[i + 1];
+        }
+        count--;
+        Console.WriteLine($"Вихованця №{id} видалено. Залишилося записів: {count}.");
+    }
 
     private static void ShowSummary(int[] ids, int[] birthYears, int[] trainings, int count)
     {
