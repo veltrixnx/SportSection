@@ -1464,7 +1464,7 @@ internal static class Program
         // Спочатку перевіряємо всі поля, щоб переривання вводу не змінило запис частково.
         if (!ReadOptionalText("Прізвище та ім'я", names[index], out string name) ||
             !ReadOptionalInt("Рік народження", birthYears[index], 1900, DateTime.Today.Year, out int year) ||
-            !ReadOptionalInt("Код виду спорту", sportIds[index], 1, int.MaxValue, out int sportId) ||
+            !ReadCategory(true, sportIds[index], out int sportId) ||
             !ReadOptionalText("Спортивний розряд", ranks[index], out string rank) ||
             !ReadOptionalDate(joinedDates[index], year, out DateTime joined) ||
             !ReadOptionalInt("Тренувань на тиждень", trainings[index], 0, 28, out int trainingCount))
