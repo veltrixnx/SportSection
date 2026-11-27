@@ -19,52 +19,50 @@ internal static class Program
             if (choice == null || choice.Trim() == "0") return;
             switch (choice.Trim())
             {
-                case "1": Lab11Program.Run(); break;
-                case "2": Lab7Program.Run(); break;
-                case "3": Lab8Program.Run(); break;
-                case "4": Lab9Program.Run(); break;
+                case "1": Run(); break;
+                case "2": Lab7_Run(); break;
+                case "3": Lab8_Run(); break;
+                case "4": Lab9_Run(); break;
                 default: Console.WriteLine("Помилка: виберіть наявний пункт меню."); break;
             }
         }
     }
-}
 
-internal static class Lab7Program
-{
-    private const int MaxTableDimension = 20;
 
-    public static void Run()
+    private const int Lab7_MaxTableDimension = 20;
+
+    public static void Lab7_Run()
     {
         Console.OutputEncoding = Encoding.UTF8;
 
         bool isRunning = true;
         while (isRunning)
         {
-            ShowMenu();
+            Lab7_ShowMenu();
             string choice = Console.ReadLine()?.Trim() ?? string.Empty;
 
             switch (choice)
             {
                 case "1":
-                    ShowAbout();
-                    PauseAndClear();
+                    Lab7_ShowAbout();
+                    Lab7_PauseAndClear();
                     break;
                 case "2":
-                    ShowTrainingCostTable();
-                    PauseAndClear();
+                    Lab7_ShowTrainingCostTable();
+                    Lab7_PauseAndClear();
                     break;
                 case "3":
-                    ShowAthleteSummaryTable();
-                    PauseAndClear();
+                    Lab7_ShowAthleteSummaryTable();
+                    Lab7_PauseAndClear();
                     break;
                 case "0":
                     Console.WriteLine("Завершення програми.");
-                    PauseAndClear();
+                    Lab7_PauseAndClear();
                     isRunning = false;
                     break;
                 default:
                     Console.WriteLine("Помилка: виберіть пункт 1, 2, 3 або 0.");
-                    PauseAndClear();
+                    Lab7_PauseAndClear();
                     break;
             }
         }
@@ -72,7 +70,7 @@ internal static class Lab7Program
         Console.WriteLine("Роботу програми завершено.");
     }
 
-    private static void ShowMenu()
+    private static void Lab7_ShowMenu()
     {
         Console.WriteLine("========================================");
         Console.WriteLine("       ОБЛІК СПОРТИВНОЇ СЕКЦІЇ");
@@ -84,7 +82,7 @@ internal static class Lab7Program
         Console.Write("Ваш вибір: ");
     }
 
-    private static void ShowAbout()
+    private static void Lab7_ShowAbout()
     {
         Console.WriteLine("\nДОВІДКА ПРО ПРОЄКТ");
         Console.WriteLine("Тема: Спортивна секція");
@@ -101,18 +99,18 @@ internal static class Lab7Program
         Console.WriteLine("Підсумкова величина: розподіл вихованців за віковими групами.");
     }
 
-    private static void ShowTrainingCostTable()
+    private static void Lab7_ShowTrainingCostTable()
     {
         Console.WriteLine("\nТАБУЛЮВАННЯ ВАРТОСТІ ТРЕНУВАНЬ");
         Console.WriteLine("Вартість = тривалість тренування × ціна за годину.");
         Console.WriteLine("Програма покаже 10 рядків із кроком 0,5 години.");
 
-        if (!ReadPositiveDouble("Введіть ціну одного тренування за годину (грн): ", out double hourlyRate))
+        if (!Lab7_ReadPositiveDouble("Введіть ціну одного тренування за годину (грн): ", out double hourlyRate))
         {
             return;
         }
 
-        if (!ReadNonNegativeDouble("Введіть початкову тривалість тренування (год): ", out double firstDuration))
+        if (!Lab7_ReadNonNegativeDouble("Введіть початкову тривалість тренування (год): ", out double firstDuration))
         {
             return;
         }
@@ -134,18 +132,18 @@ internal static class Lab7Program
         Console.WriteLine($"\nПобудовано {RowCount} рядків. Дробовий крок таблиці: {Step:F1} год.");
     }
 
-    private static void ShowAthleteSummaryTable()
+    private static void Lab7_ShowAthleteSummaryTable()
     {
         Console.WriteLine("\nЗВЕДЕНА ТАБЛИЦЯ ВИХОВАНЦІВ");
         Console.WriteLine("Рядки — вікові групи, стовпці — види спорту.");
         Console.WriteLine("У клітинках введіть кількість вихованців; останній стовпець і нижній рядок міститимуть підсумки.");
 
-        if (!ReadPositiveInt("Кількість вікових груп (рядків): ", out int rowCount))
+        if (!Lab7_ReadPositiveInt("Кількість вікових груп (рядків): ", out int rowCount))
         {
             return;
         }
 
-        if (!ReadPositiveInt("Кількість видів спорту (стовпців): ", out int columnCount))
+        if (!Lab7_ReadPositiveInt("Кількість видів спорту (стовпців): ", out int columnCount))
         {
             return;
         }
@@ -158,12 +156,12 @@ internal static class Lab7Program
 
         for (int row = 0; row < rowCount; row++)
         {
-            ageGroups[row] = ReadNonEmptyText($"Назва вікової групи {row + 1}: ");
+            ageGroups[row] = Lab7_ReadNonEmptyText($"Назва вікової групи {row + 1}: ");
         }
 
         for (int column = 0; column < columnCount; column++)
         {
-            sports[column] = ReadNonEmptyText($"Назва виду спорту {column + 1}: ");
+            sports[column] = Lab7_ReadNonEmptyText($"Назва виду спорту {column + 1}: ");
         }
 
         Console.WriteLine("\nВведіть кількість вихованців для кожної пари «вікова група — вид спорту».");
@@ -171,7 +169,7 @@ internal static class Lab7Program
         {
             for (int column = 0; column < columnCount; column++)
             {
-                if (!ReadNonNegativeInt($"{ageGroups[row]} / {sports[column]}: ", out int count))
+                if (!Lab7_ReadNonNegativeInt($"{ageGroups[row]} / {sports[column]}: ", out int count))
                 {
                     return;
                 }
@@ -222,11 +220,11 @@ internal static class Lab7Program
             }
         }
 
-        PrintCell("Вікова група", labelWidth);
+        Lab7_PrintCell("Вікова група", labelWidth);
         for (int column = 0; column < columnCount; column++)
         {
             Console.Write(" | ");
-            PrintCell(sports[column], columnWidths[column]);
+            Lab7_PrintCell(sports[column], columnWidths[column]);
         }
 
         Console.Write(" | ");
@@ -246,44 +244,44 @@ internal static class Lab7Program
             totalColumnWidth = grandTotalWidth;
         }
 
-        PrintCell("Разом", totalColumnWidth);
+        Lab7_PrintCell("Разом", totalColumnWidth);
         Console.WriteLine();
 
-        PrintSeparator(labelWidth, columnWidths, totalColumnWidth);
+        Lab7_PrintSeparator(labelWidth, columnWidths, totalColumnWidth);
 
         for (int row = 0; row < rowCount; row++)
         {
-            PrintCell(ageGroups[row], labelWidth);
+            Lab7_PrintCell(ageGroups[row], labelWidth);
             for (int column = 0; column < columnCount; column++)
             {
                 Console.Write(" | ");
-                PrintCell(athleteCounts[row, column].ToString(CultureInfo.InvariantCulture), columnWidths[column]);
+                Lab7_PrintCell(athleteCounts[row, column].ToString(CultureInfo.InvariantCulture), columnWidths[column]);
             }
 
             Console.Write(" | ");
-            PrintCell(rowTotals[row].ToString(CultureInfo.InvariantCulture), totalColumnWidth);
+            Lab7_PrintCell(rowTotals[row].ToString(CultureInfo.InvariantCulture), totalColumnWidth);
             Console.WriteLine();
         }
 
-        PrintSeparator(labelWidth, columnWidths, totalColumnWidth);
-        PrintCell("Разом", labelWidth);
+        Lab7_PrintSeparator(labelWidth, columnWidths, totalColumnWidth);
+        Lab7_PrintCell("Разом", labelWidth);
         for (int column = 0; column < columnCount; column++)
         {
             Console.Write(" | ");
-            PrintCell(columnTotals[column].ToString(CultureInfo.InvariantCulture), columnWidths[column]);
+            Lab7_PrintCell(columnTotals[column].ToString(CultureInfo.InvariantCulture), columnWidths[column]);
         }
 
         Console.Write(" | ");
-        PrintCell(grandTotal.ToString(CultureInfo.InvariantCulture), totalColumnWidth);
+        Lab7_PrintCell(grandTotal.ToString(CultureInfo.InvariantCulture), totalColumnWidth);
         Console.WriteLine();
     }
 
-    private static void PrintCell(string value, int width)
+    private static void Lab7_PrintCell(string value, int width)
     {
         Console.Write(value.PadRight(width));
     }
 
-    private static void PrintSeparator(int labelWidth, int[] columnWidths, int totalColumnWidth)
+    private static void Lab7_PrintSeparator(int labelWidth, int[] columnWidths, int totalColumnWidth)
     {
         Console.Write(new string('-', labelWidth));
         for (int column = 0; column < columnWidths.Length; column++)
@@ -296,23 +294,23 @@ internal static class Lab7Program
         Console.WriteLine(new string('-', totalColumnWidth));
     }
 
-    private static bool ReadPositiveInt(string prompt, out int value)
+    private static bool Lab7_ReadPositiveInt(string prompt, out int value)
     {
         while (true)
         {
             Console.Write(prompt);
             string input = Console.ReadLine()?.Trim() ?? string.Empty;
-            if (int.TryParse(input, out value) && value > 0 && value <= MaxTableDimension)
+            if (int.TryParse(input, out value) && value > 0 && value <= Lab7_MaxTableDimension)
             {
                 return true;
             }
 
-            Console.WriteLine($"Помилка: введіть ціле число від 1 до {MaxTableDimension}. Повернення до меню.");
+            Console.WriteLine($"Помилка: введіть ціле число від 1 до {Lab7_MaxTableDimension}. Повернення до меню.");
             return false;
         }
     }
 
-    private static bool ReadNonNegativeInt(string prompt, out int value)
+    private static bool Lab7_ReadNonNegativeInt(string prompt, out int value)
     {
         while (true)
         {
@@ -328,7 +326,7 @@ internal static class Lab7Program
         }
     }
 
-    private static bool ReadPositiveDouble(string prompt, out double value)
+    private static bool Lab7_ReadPositiveDouble(string prompt, out double value)
     {
         while (true)
         {
@@ -345,7 +343,7 @@ internal static class Lab7Program
         }
     }
 
-    private static bool ReadNonNegativeDouble(string prompt, out double value)
+    private static bool Lab7_ReadNonNegativeDouble(string prompt, out double value)
     {
         while (true)
         {
@@ -362,7 +360,7 @@ internal static class Lab7Program
         }
     }
 
-    private static string ReadNonEmptyText(string prompt)
+    private static string Lab7_ReadNonEmptyText(string prompt)
     {
         while (true)
         {
@@ -377,7 +375,7 @@ internal static class Lab7Program
         }
     }
 
-    private static void PauseAndClear()
+    private static void Lab7_PauseAndClear()
     {
         Console.WriteLine("\nНатисніть Enter, щоб повернутися до меню...");
         Console.ReadLine();
@@ -395,38 +393,36 @@ internal static class Lab7Program
             // Деякі консолі Rider не підтримують очищення екрана.
         }
     }
-}
 
-internal static class Lab8Program
-{
-    private const int MaxTableDimension = 20;
-    private const double TrainingRatePerHour = 250.0;
-    private const double MaxTrainingHours = 12.0;
 
-    public static void Run()
+    private const int Lab8_MaxTableDimension = 20;
+    private const double Lab8_TrainingRatePerHour = 250.0;
+    private const double Lab8_MaxTrainingHours = 12.0;
+
+    public static void Lab8_Run()
     {
         Console.OutputEncoding = Encoding.UTF8;
         bool isRunning = true;
 
         while (isRunning)
         {
-            ShowMenu();
+            Lab8_ShowMenu();
             string choice = Console.ReadLine()?.Trim() ?? string.Empty;
             Console.WriteLine();
 
             switch (choice)
             {
-                case "1": ShowAbout(); Pause(); break;
-                case "2": ShowTrainingCostTable(); Pause(); break;
-                case "3": ShowAthleteSummaryTable(); Pause(); break;
+                case "1": Lab8_ShowAbout(); Lab8_Pause(); break;
+                case "2": Lab8_ShowTrainingCostTable(); Lab8_Pause(); break;
+                case "3": Lab8_ShowAthleteSummaryTable(); Lab8_Pause(); break;
                 case "0": isRunning = false; break;
-                default: Console.WriteLine("Немає такого пункту меню."); Pause(); break;
+                default: Console.WriteLine("Немає такого пункту меню."); Lab8_Pause(); break;
             }
         }
 
     }
 
-    private static void ShowMenu()
+    private static void Lab8_ShowMenu()
     {
         Console.WriteLine("========================================");
         Console.WriteLine("       ОБЛІК СПОРТИВНОЇ СЕКЦІЇ");
@@ -438,7 +434,7 @@ internal static class Lab8Program
         Console.Write("Ваш вибір: ");
     }
 
-    private static void ShowAbout()
+    private static void Lab8_ShowAbout()
     {
         Console.WriteLine("ДОВІДКА ПРО ПРОЄКТ");
         Console.WriteLine("Тема: Спортивна секція");
@@ -454,44 +450,44 @@ internal static class Lab8Program
         Console.WriteLine("Довідник: види спорту.");
     }
     
-    private static void ShowTrainingCostTable()
+    private static void Lab8_ShowTrainingCostTable()
     {
         Console.WriteLine("ТАБУЛЮВАННЯ ВАРТОСТІ ТРЕНУВАНЬ");
-        Console.WriteLine($"Ціна за годину тренування в цьому прикладі: {TrainingRatePerHour:F2} грн.");
+        Console.WriteLine($"Ціна за годину тренування в цьому прикладі: {Lab8_TrainingRatePerHour:F2} грн.");
 
-        double step = ReadFractionalStep("Дробовий крок у годинах (0,1–1,5): ", 0.1, 1.5);
-        double maxStart = MaxTrainingHours - 7 * step;
-        double start = ReadDouble($"Початкова тривалість (0–{FormatNumber(maxStart)} год): ", 0, maxStart);
+        double step = Lab8_ReadFractionalStep("Дробовий крок у годинах (0,1–1,5): ", 0.1, 1.5);
+        double maxStart = Lab8_MaxTrainingHours - 7 * step;
+        double start = Lab8_ReadDouble($"Початкова тривалість (0–{Lab8_FormatNumber(maxStart)} год): ", 0, maxStart);
         double minimumEnd = start + 7 * step;
-        double end = ReadDouble($"Кінцева тривалість ({FormatNumber(minimumEnd)}–{FormatNumber(MaxTrainingHours)} год): ", minimumEnd, MaxTrainingHours);
+        double end = Lab8_ReadDouble($"Кінцева тривалість ({Lab8_FormatNumber(minimumEnd)}–{Lab8_FormatNumber(Lab8_MaxTrainingHours)} год): ", minimumEnd, Lab8_MaxTrainingHours);
 
-        PrintTrainingCostTable(start, end, step);
+        Lab8_PrintTrainingCostTable(start, end, step);
     }
 
-    private static double CalculateTrainingCost(double hours, double rate)
+    private static double Lab8_CalculateTrainingCost(double hours, double rate)
     {
         return hours * rate;
     }
 
-    private static void PrintTrainingCostTable(double start, double end, double step)
+    private static void Lab8_PrintTrainingCostTable(double start, double end, double step)
     {
         Console.WriteLine("\nТривалість, год | Вартість, грн");
         Console.WriteLine("----------------|---------------");
 
         for (double hours = start; hours <= end + step * 0.0000001; hours += step)
         {
-            double cost = CalculateTrainingCost(hours, TrainingRatePerHour);
-            string hoursText = FormatNumber(hours);
-            string costText = FormatNumber(cost);
+            double cost = Lab8_CalculateTrainingCost(hours, Lab8_TrainingRatePerHour);
+            string hoursText = Lab8_FormatNumber(hours);
+            string costText = Lab8_FormatNumber(cost);
             Console.WriteLine($"{hoursText,15} | {costText,13}");
         }
     }
 
-    private static double ReadFractionalStep(string prompt, double min, double max)
+    private static double Lab8_ReadFractionalStep(string prompt, double min, double max)
     {
         while (true)
         {
-            double step = ReadDouble(prompt, min, max);
+            double step = Lab8_ReadDouble(prompt, min, max);
             if (step != Math.Truncate(step))
             {
                 return step;
@@ -501,13 +497,13 @@ internal static class Lab8Program
         }
     }
 
-    private static void ShowAthleteSummaryTable()
+    private static void Lab8_ShowAthleteSummaryTable()
     {
         Console.WriteLine("ЗВЕДЕНА ТАБЛИЦЯ ВИХОВАНЦІВ");
         Console.WriteLine("Рядки — вікові групи, стовпці — види спорту.");
 
-        int rowCount = ReadInt($"Кількість вікових груп (1–{MaxTableDimension}): ", 1, MaxTableDimension);
-        int columnCount = ReadInt($"Кількість видів спорту (1–{MaxTableDimension}): ", 1, MaxTableDimension);
+        int rowCount = Lab8_ReadInt($"Кількість вікових груп (1–{Lab8_MaxTableDimension}): ", 1, Lab8_MaxTableDimension);
+        int columnCount = Lab8_ReadInt($"Кількість видів спорту (1–{Lab8_MaxTableDimension}): ", 1, Lab8_MaxTableDimension);
 
         string[] ageGroups = new string[rowCount];
         string[] sports = new string[columnCount];
@@ -515,12 +511,12 @@ internal static class Lab8Program
 
         for (int row = 0; row < rowCount; row++)
         {
-            ageGroups[row] = ReadNonEmptyText($"Назва вікової групи {row + 1}: ");
+            ageGroups[row] = Lab8_ReadNonEmptyText($"Назва вікової групи {row + 1}: ");
         }
 
         for (int column = 0; column < columnCount; column++)
         {
-            sports[column] = ReadNonEmptyText($"Назва виду спорту {column + 1}: ");
+            sports[column] = Lab8_ReadNonEmptyText($"Назва виду спорту {column + 1}: ");
         }
 
         Console.WriteLine("Введіть кількість вихованців для кожної пари «вікова група — вид спорту».");
@@ -528,14 +524,14 @@ internal static class Lab8Program
         {
             for (int column = 0; column < columnCount; column++)
             {
-                athleteCounts[row, column] = ReadInt($"{ageGroups[row]} / {sports[column]}: ", 0, int.MaxValue);
+                athleteCounts[row, column] = Lab8_ReadInt($"{ageGroups[row]} / {sports[column]}: ", 0, int.MaxValue);
             }
         }
 
-        PrintAthleteSummaryTable(ageGroups, sports, athleteCounts);
+        Lab8_PrintAthleteSummaryTable(ageGroups, sports, athleteCounts);
     }
 
-    private static void PrintAthleteSummaryTable(string[] ageGroups, string[] sports, int[,] athleteCounts)
+    private static void Lab8_PrintAthleteSummaryTable(string[] ageGroups, string[] sports, int[,] athleteCounts)
     {
         int rowCount = ageGroups.Length;
         int columnCount = sports.Length;
@@ -585,47 +581,47 @@ internal static class Lab8Program
 
         totalWidth = Math.Max(totalWidth, grandTotal.ToString(CultureInfo.InvariantCulture).Length);
 
-        PrintCell("Вікова група", labelWidth);
+        Lab8_PrintCell("Вікова група", labelWidth);
         for (int column = 0; column < columnCount; column++)
         {
             Console.Write(" | ");
-            PrintCell(sports[column], columnWidths[column]);
+            Lab8_PrintCell(sports[column], columnWidths[column]);
         }
 
         Console.Write(" | ");
-        PrintCell("Разом", totalWidth);
+        Lab8_PrintCell("Разом", totalWidth);
         Console.WriteLine();
-        PrintTableSeparator(labelWidth, columnWidths, totalWidth);
+        Lab8_PrintTableSeparator(labelWidth, columnWidths, totalWidth);
 
         for (int row = 0; row < rowCount; row++)
         {
-            PrintCell(ageGroups[row], labelWidth);
+            Lab8_PrintCell(ageGroups[row], labelWidth);
             for (int column = 0; column < columnCount; column++)
             {
                 Console.Write(" | ");
-                PrintCell(athleteCounts[row, column].ToString(CultureInfo.InvariantCulture), columnWidths[column]);
+                Lab8_PrintCell(athleteCounts[row, column].ToString(CultureInfo.InvariantCulture), columnWidths[column]);
             }
 
             Console.Write(" | ");
-            PrintCell(rowTotals[row].ToString(CultureInfo.InvariantCulture), totalWidth);
+            Lab8_PrintCell(rowTotals[row].ToString(CultureInfo.InvariantCulture), totalWidth);
             Console.WriteLine();
         }
 
-        PrintTableSeparator(labelWidth, columnWidths, totalWidth);
-        PrintCell("Разом", labelWidth);
+        Lab8_PrintTableSeparator(labelWidth, columnWidths, totalWidth);
+        Lab8_PrintCell("Разом", labelWidth);
         for (int column = 0; column < columnCount; column++)
         {
             Console.Write(" | ");
-            PrintCell(columnTotals[column].ToString(CultureInfo.InvariantCulture), columnWidths[column]);
+            Lab8_PrintCell(columnTotals[column].ToString(CultureInfo.InvariantCulture), columnWidths[column]);
         }
 
         Console.Write(" | ");
-        PrintCell(grandTotal.ToString(CultureInfo.InvariantCulture), totalWidth);
+        Lab8_PrintCell(grandTotal.ToString(CultureInfo.InvariantCulture), totalWidth);
         Console.WriteLine();
     }
 
     // Запитує число повторно, доки воно не потрапить у вказаний діапазон.
-    private static double ReadDouble(string prompt, double min, double max)
+    private static double Lab8_ReadDouble(string prompt, double min, double max)
     {
         while (true)
         {
@@ -642,7 +638,7 @@ internal static class Lab8Program
 
             if (value < min || value > max)
             {
-                Console.WriteLine($"Помилка: число має бути в межах від {FormatNumber(min)} до {FormatNumber(max)}.");
+                Console.WriteLine($"Помилка: число має бути в межах від {Lab8_FormatNumber(min)} до {Lab8_FormatNumber(max)}.");
                 continue;
             }
 
@@ -650,7 +646,7 @@ internal static class Lab8Program
         }
     }
 
-    private static int ReadInt(string prompt, int min, int max)
+    private static int Lab8_ReadInt(string prompt, int min, int max)
     {
         while (true)
         {
@@ -673,7 +669,7 @@ internal static class Lab8Program
         }
     }
 
-    private static string ReadNonEmptyText(string prompt)
+    private static string Lab8_ReadNonEmptyText(string prompt)
     {
         while (true)
         {
@@ -689,12 +685,12 @@ internal static class Lab8Program
         }
     }
 
-    private static void PrintCell(string value, int width)
+    private static void Lab8_PrintCell(string value, int width)
     {
         Console.Write(value.PadRight(width));
     }
 
-    private static void PrintTableSeparator(int labelWidth, int[] columnWidths, int totalWidth)
+    private static void Lab8_PrintTableSeparator(int labelWidth, int[] columnWidths, int totalWidth)
     {
         Console.Write(new string('-', labelWidth));
         for (int column = 0; column < columnWidths.Length; column++)
@@ -707,12 +703,12 @@ internal static class Lab8Program
         Console.WriteLine(new string('-', totalWidth));
     }
 
-    private static string FormatNumber(double value)
+    private static string Lab8_FormatNumber(double value)
     {
         return value.ToString("0.##", CultureInfo.GetCultureInfo("uk-UA"));
     }
 
-    private static void Pause()
+    private static void Lab8_Pause()
     {
         Console.WriteLine("\nНатисніть Enter, щоб повернутися до меню...");
         Console.ReadLine();
@@ -730,11 +726,9 @@ internal static class Lab8Program
             // Очищення недоступне для перенаправленого виводу.
         }
     }
-}
 
-internal static class Lab9Program
-{
-    public static void Run()
+
+    public static void Lab9_Run()
     {
         Console.OutputEncoding = Encoding.UTF8;
 
@@ -768,7 +762,7 @@ internal static class Lab9Program
                 Console.Write($"Введіть число №{i + 1}: ");
                 string valueText = Console.ReadLine() ?? string.Empty;
 
-                if (TryParseDouble(valueText, out initialValues[i]))
+                if (Lab9_TryParseDouble(valueText, out initialValues[i]))
                 {
                     break;
                 }
@@ -777,7 +771,7 @@ internal static class Lab9Program
             }
         }
 
-        AddValues(values, ref count, initialValues);
+        Lab9_AddValues(values, ref count, initialValues);
         Console.WriteLine($"Лічильник у Main після заповнення: {count}.");
 
         bool isRunning = true;
@@ -829,7 +823,7 @@ internal static class Lab9Program
                             Console.Write($"Введіть нове число №{i + 1}: ");
                             string valueText = Console.ReadLine() ?? string.Empty;
 
-                            if (TryParseDouble(valueText, out valuesToAdd[i]))
+                            if (Lab9_TryParseDouble(valueText, out valuesToAdd[i]))
                             {
                                 break;
                             }
@@ -838,7 +832,7 @@ internal static class Lab9Program
                         }
                     }
 
-                    AddValues(values, ref count, valuesToAdd);
+                    Lab9_AddValues(values, ref count, valuesToAdd);
                     Console.WriteLine($"Додано {amount} значень. Тепер у масиві: {count}.");
                     break;
                 }
@@ -851,7 +845,7 @@ internal static class Lab9Program
                     if (int.TryParse(indexText, out int number))
                     {
                         // У меню номер починається з 1, а індекс масиву — з 0.
-                        RemoveAt(values, ref count, number - 1);
+                        Lab9_RemoveAt(values, ref count, number - 1);
                     }
                     else
                     {
@@ -862,11 +856,11 @@ internal static class Lab9Program
                 }
 
                 case "3":
-                    ShowStatistics(values, count);
+                    Lab9_ShowStatistics(values, count);
                     break;
 
                 case "4":
-                    PrintValues(values, count);
+                    Lab9_PrintValues(values, count);
                     break;
 
                 case "5":
@@ -874,14 +868,14 @@ internal static class Lab9Program
                     int originalNumber = 10;
                     Console.WriteLine("Демонстрація типу значення (int):");
                     Console.WriteLine($"До виклику методу: {originalNumber}");
-                    TryChangeInteger(originalNumber);
+                    Lab9_TryChangeInteger(originalNumber);
                     Console.WriteLine($"Після виклику методу в Main: {originalNumber}");
 
                     double[] sampleArray = { 5.0 };
                     Console.WriteLine();
                     Console.WriteLine("Демонстрація масиву (посилального типу):");
                     Console.WriteLine($"До виклику методу: {sampleArray[0]:0.##}");
-                    ChangeFirstArrayElement(sampleArray);
+                    Lab9_ChangeFirstArrayElement(sampleArray);
                     Console.WriteLine($"Після виклику методу в Main: {sampleArray[0]:0.##}");
                     break;
                 }
@@ -908,7 +902,7 @@ internal static class Lab9Program
     }
 
     // Додає підготовлені в Main числа й змінює лічильник через ref.
-    private static void AddValues(double[] values, ref int count, double[] newValues)
+    private static void Lab9_AddValues(double[] values, ref int count, double[] newValues)
     {
         if (newValues.Length > values.Length - count)
         {
@@ -924,7 +918,7 @@ internal static class Lab9Program
     }
 
     // Друкує лише заповнену частину масиву. Клавіатуру цей метод не читає.
-    private static void PrintValues(double[] values, int count)
+    private static void Lab9_PrintValues(double[] values, int count)
     {
         if (count == 0)
         {
@@ -945,7 +939,7 @@ internal static class Lab9Program
     }
 
 
-    private static bool FindMaximum(double[] values, int count, out double maximum, out int number)
+    private static bool Lab9_FindMaximum(double[] values, int count, out double maximum, out int number)
     {
         maximum = 0;
         number = 0;
@@ -971,7 +965,7 @@ internal static class Lab9Program
     }
 
     // Видаляє елемент за індексом масиву, зсуває наступні значення вліво.
-    private static void RemoveAt(double[] values, ref int count, int index)
+    private static void Lab9_RemoveAt(double[] values, ref int count, int index)
     {
         if (index < 0 || index >= count)
         {
@@ -989,9 +983,9 @@ internal static class Lab9Program
         Console.WriteLine($"Значення з номером {index + 1} видалено.");
     }
 
-    private static void ShowStatistics(double[] values, int count)
+    private static void Lab9_ShowStatistics(double[] values, int count)
     {
-        if (!FindMaximum(values, count, out double maximum, out int number))
+        if (!Lab9_FindMaximum(values, count, out double maximum, out int number))
         {
             Console.WriteLine("Статистики немає: масив порожній.");
             return;
@@ -1011,19 +1005,19 @@ internal static class Lab9Program
     }
 
     // int передано за значенням: зміна локальної копії не змінює змінну в Main.
-    private static void TryChangeInteger(int number)
+    private static void Lab9_TryChangeInteger(int number)
     {
         number = 999;
         Console.WriteLine($"Усередині методу локальна копія дорівнює: {number}");
     }
 
     // Масив передається як посилання: зміна його елемента видима в Main.
-    private static void ChangeFirstArrayElement(double[] array)
+    private static void Lab9_ChangeFirstArrayElement(double[] array)
     {
         array[0] = 99;
     }
 
-    private static bool TryParseDouble(string text, out double value)
+    private static bool Lab9_TryParseDouble(string text, out double value)
     {
         string normalizedText = text.Trim().Replace(',', '.');
         return double.TryParse(
@@ -1033,15 +1027,22 @@ internal static class Lab9Program
                    out value) &&
                double.IsFinite(value);
     }
-}
 
-internal static class Lab11Program
-{
+
     private const int Capacity = 100;
+    private const int SportCapacity = 20;
+    // Довідник видів спорту: один індекс відповідає одній позиції.
+    private static int[] categoryIds = new int[SportCapacity];
+    private static string[] categoryNames = new string[SportCapacity];
+    private static bool[] categoryActive = new bool[SportCapacity];
+    private static int categoryCount;
+    private static int nextCategoryId;
 
     public static void Run()
     {
         Console.OutputEncoding = Encoding.UTF8;
+        categoryCount = 0;
+        nextCategoryId = 1;
         int[] ids = new int[Capacity];
         string[] names = new string[Capacity];
         int[] birthYears = new int[Capacity];
@@ -1085,7 +1086,10 @@ internal static class Lab11Program
                 case "12":
                     ShowSummary(ids, birthYears, trainings, count);
                     break;
-                case "6": case "7": case "8": case "9": case "11":
+                case "11":
+                    ShowCategoriesMenu();
+                    break;
+                case "7": case "8": case "9":
                     Console.WriteLine("Цей пункт поки не реалізовано.");
                     break;
                 default:
@@ -1110,6 +1114,138 @@ internal static class Lab11Program
         Console.Write("Ваш вибір: ");
     }
 
+    // Позицію довідника шукаємо за кодом, а не за її індексом у масивах.
+    private static int CategoryIndex(int id)
+    {
+        for (int i = 0; i < categoryCount; i++)
+        {
+            if (categoryIds[i] == id) return i;
+        }
+        return -1;
+    }
+
+    private static string CategoryName(int id)
+    {
+        int index = CategoryIndex(id);
+        return index < 0 ? "(невідома)" : categoryNames[index];
+    }
+
+    private static bool HasActiveCategory()
+    {
+        for (int i = 0; i < categoryCount; i++)
+        {
+            if (categoryActive[i]) return true;
+        }
+        return false;
+    }
+
+    private static void ShowCategoriesMenu()
+    {
+        while (true)
+        {
+            Console.WriteLine("\nДОВІДНИК ВИДІВ СПОРТУ");
+            Console.WriteLine("1 — Показати всі види спорту");
+            Console.WriteLine("2 — Додати вид спорту");
+            Console.WriteLine("3 — Вимкнути вид спорту");
+            Console.WriteLine("0 — Повернутися до основного меню");
+            Console.Write("Ваш вибір: ");
+            string? choice = Console.ReadLine()?.Trim();
+            if (choice == null || choice == "0") return;
+            switch (choice)
+            {
+                case "1": ShowCategories(false); break;
+                case "2": AddCategory(); break;
+                case "3": DeactivateCategory(); break;
+                default: Console.WriteLine("Помилка: виберіть 1, 2, 3 або 0."); break;
+            }
+        }
+    }
+
+    private static void ShowCategories(bool onlyActive)
+    {
+        if (categoryCount == 0)
+        {
+            Console.WriteLine("Довідник видів спорту порожній.");
+            return;
+        }
+        bool found = false;
+        for (int i = 0; i < categoryCount; i++)
+        {
+            if (onlyActive && !categoryActive[i]) continue;
+            if (!found) Console.WriteLine("Код  Назва  Стан");
+            string state = categoryActive[i] ? "активний" : "вимкнений";
+            Console.WriteLine($"{categoryIds[i],3}  {categoryNames[i]}  ({state})");
+            found = true;
+        }
+        if (!found) Console.WriteLine("Активних видів спорту немає.");
+    }
+
+    private static void AddCategory()
+    {
+        if (categoryCount >= SportCapacity)
+        {
+            Console.WriteLine("Довідник заповнений.");
+            return;
+        }
+        if (!ReadText("Назва виду спорту: ", out string name)) return;
+        // Порівнюємо без урахування регістру, зокрема з вимкненими позиціями.
+        for (int i = 0; i < categoryCount; i++)
+        {
+            if (string.Equals(categoryNames[i], name, StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("Такий вид спорту вже є в довіднику.");
+                return;
+            }
+        }
+        categoryIds[categoryCount] = nextCategoryId;
+        categoryNames[categoryCount] = name;
+        categoryActive[categoryCount] = true;
+        categoryCount++;
+        nextCategoryId++;
+        Console.WriteLine($"Додано вид спорту «{name}», код: {nextCategoryId - 1}.");
+    }
+
+    private static void DeactivateCategory()
+    {
+        if (categoryCount == 0)
+        {
+            Console.WriteLine("Довідник видів спорту порожній.");
+            return;
+        }
+        ShowCategories(false);
+        if (!ReadInt("Код виду спорту для вимкнення: ", 1, int.MaxValue, out int id)) return;
+        int index = CategoryIndex(id);
+        if (index < 0) { Console.WriteLine("Вид спорту не знайдено."); return; }
+        if (!categoryActive[index]) { Console.WriteLine("Цей вид спорту вже вимкнений."); return; }
+        // Назва залишається для записів, які вже посилаються на цей код.
+        categoryActive[index] = false;
+        Console.WriteLine($"Вид спорту «{categoryNames[index]}» вимкнено.");
+    }
+
+    private static bool ReadCategory(bool optional, int currentId, out int value)
+    {
+        value = currentId;
+        Console.WriteLine("Оберіть активний вид спорту:");
+        ShowCategories(true);
+        if (!optional && !HasActiveCategory()) return false;
+        while (true)
+        {
+            if (optional)
+                Console.Write($"Код виду спорту [{CategoryName(currentId)}; Enter — залишити]: ");
+            else Console.Write("Код виду спорту: ");
+            string? input = Console.ReadLine();
+            if (input == null) return false;
+            input = input.Trim();
+            if (optional && input.Length == 0) return true;
+            if (int.TryParse(input, out int id))
+            {
+                int index = CategoryIndex(id);
+                if (index >= 0 && categoryActive[index]) { value = id; return true; }
+            }
+            Console.WriteLine("Помилка: виберіть код наявного активного виду спорту.");
+        }
+    }
+
     private static void AddAthlete(int[] ids, string[] names, int[] birthYears, int[] sportIds,
         string[] ranks, DateTime[] joinedDates, int[] trainings, ref int count, ref int nextId)
     {
@@ -1119,10 +1255,16 @@ internal static class Lab11Program
             return;
         }
 
+        if (!HasActiveCategory())
+        {
+            Console.WriteLine("Немає активних видів спорту. Спочатку додайте вид спорту в довіднику (пункт 11).");
+            return;
+        }
+
         Console.WriteLine("\nДОДАВАННЯ ВИХОВАНЦЯ");
         if (!ReadText("Прізвище та ім'я: ", out string name) ||
             !ReadInt("Рік народження: ", 1900, DateTime.Today.Year, out int birthYear) ||
-            !ReadInt("Код виду спорту (додатне число): ", 1, int.MaxValue, out int sportId) ||
+            !ReadCategory(false, 0, out int sportId) ||
             !ReadText("Спортивний розряд: ", out string rank) ||
             !ReadDate("Дата вступу (дд.мм.рррр): ", birthYear, out DateTime joinedDate) ||
             !ReadInt("Кількість тренувань на тиждень (0–28): ", 0, 28, out int trainingCount))
@@ -1164,14 +1306,24 @@ internal static class Lab11Program
 
         string[] exampleNames = { "Іван Петренко", "Марія Коваль", "Олег Мельник", "Анна Бойко", "Андрій Шевченко", "Софія Ткач" };
         int[] ages = { 9, 11, 13, 16, 19, 23 };
-        int[] exampleSports = { 1, 2, 1, 3, 2, 3 };
+        int[] activeSports = new int[categoryCount];
+        int activeCount = 0;
+        for (int i = 0; i < categoryCount; i++)
+        {
+            if (categoryActive[i]) activeSports[activeCount++] = categoryIds[i];
+        }
+        if (activeCount == 0)
+        {
+            Console.WriteLine("Немає активних видів спорту. Спочатку додайте вид спорту в довіднику (пункт 11).");
+            return;
+        }
         string[] exampleRanks = { "початковий", "III юнацький", "II юнацький", "I юнацький", "III дорослий", "II дорослий" };
         int[] exampleTrainings = { 2, 3, 3, 4, 4, 5 };
         int year = DateTime.Today.Year;
         for (int i = 0; i < exampleCount; i++)
         {
             StoreAthlete(ids, names, birthYears, sportIds, ranks, joinedDates, trainings,
-                ref count, ref nextId, exampleNames[i], year - ages[i], exampleSports[i],
+                ref count, ref nextId, exampleNames[i], year - ages[i], activeSports[i % activeCount],
                 exampleRanks[i], DateTime.Today.AddYears(-2), exampleTrainings[i]);
         }
         Console.WriteLine("Додано 6 готових записів.");
@@ -1506,4 +1658,5 @@ internal static class Lab11Program
             Console.WriteLine("Помилка: введіть дійсну дату дд.мм.рррр, не пізніше сьогодні і не раніше року народження.");
         }
     }
+
 }
