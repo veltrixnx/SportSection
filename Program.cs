@@ -1080,6 +1080,9 @@ internal static class Program
                 case "5":
                     DeleteAthlete(ids, names, birthYears, sportIds, ranks, joinedDates, trainings, ref count);
                     break;
+                case "6":
+                    ShowCrossTable(sportIds, joinedDates, trainings, count);
+                    break;
                 case "10":
                     AddExamples(ids, names, birthYears, sportIds, ranks, joinedDates, trainings, ref count, ref nextId);
                     break;
@@ -1244,6 +1247,99 @@ internal static class Program
             }
             Console.WriteLine("Помилка: виберіть код наявного активного виду спорту.");
         }
+    }
+
+    // Один метод будує обидва режими та не виводить нічого на екран.
+    private static int[,] BuildGrid(int[] sportIds, DateTime[] joinedDates, int[] trainings,
+        int count, bool sumTrainings)
+    {
+        int[,] grid = new int[categoryCount, 12];
+        for (int k = 0; k < count; k++)
+        {
+            int row = CategoryIndex(sportIds[k]);
+            int col = joinedDates[k].Month - 1;
+            if (row >= 0) grid[row, col] += sumTrainings ? trainings[k] : 1;
+        }
+        return grid;
+    }
+
+    private static void ShowCrossTable(int[] sportIds, DateTime[] joinedDates, int[] trainings, int count)
+    {
+        if (categoryCount == 0)
+        {
+            Console.WriteLine("Довідник видів спорту порожній: таблицю побудувати неможливо.");
+            return;
+        }
+        if (count == 0)
+        {
+            Console.WriteLine("Сховище вихованців порожнє: таблицю побудувати неможливо.");
+            return;
+        }
+        Console.WriteLine("1 — Кількість вихованців");
+        Console.WriteLine("2 — Сума тренувань на тиждень");
+        Console.WriteLine("0 — Повернутися до меню");
+        string? choice;
+        while (true)
+        {
+            Console.Write("Ваш вибір: ");
+            choice = Console.ReadLine()?.Trim();
+            if (choice == null || choice == "0") return;
+            if (choice == "1" || choice == "2") break;
+            Console.WriteLine("Помилка: виберіть 1, 2 або 0.");
+        }
+        bool sumTrainings = choice == "2";
+        int[,] grid = BuildGrid(sportIds, joinedDates, trainings, count, sumTrainings);
+        PrintCrossTable(grid, sumTrainings);
+        int unknown = 0;
+        for (int i = 0; i < count; i++)
+        {
+            if (CategoryIndex(sportIds[i]) < 0) unknown++;
+        }
+        if (unknown > 0)
+            Console.WriteLine($"Не враховано записів із невідомим видом спорту: {unknown}.");
+    }
+
+    private static void PrintCrossTable(int[,] grid, bool sumTrainings)
+    {
+        int rows = grid.GetLength(0);
+        int cols = grid.GetLength(1);
+        int labelWidth = "Вид спорту".Length;
+        for (int i = 0; i < rows; i++)
+        {
+            int width = categoryNames[i].Length + (categoryActive[i] ? 0 : " (вимк.)".Length);
+            if (width > labelWidth) labelWidth = width;
+        }
+        Console.WriteLine(sumTrainings ? "\nСУМА ТРЕНУВАНЬ ЗА ВИДАМИ СПОРТУ ТА МІСЯЦЯМИ ВСТУПУ" :
+            "\nКІЛЬКІСТЬ ВИХОВАНЦІВ ЗА ВИДАМИ СПОРТУ ТА МІСЯЦЯМИ ВСТУПУ");
+        Console.Write("Вид спорту".PadRight(labelWidth));
+        for (int j = 0; j < cols; j++) Console.Write($" {j + 1,5}");
+        Console.WriteLine($" {"Разом",6}");
+        int[] colTotals = new int[cols];
+        int grandTotal = 0;
+        for (int i = 0; i < rows; i++)
+        {
+            string label = categoryNames[i] + (categoryActive[i] ? "" : " (вимк.)");
+            Console.Write(label.PadRight(labelWidth));
+            int rowTotal = 0;
+            for (int j = 0; j < cols; j++)
+            {
+                Console.Write($" {grid[i, j],5}");
+                rowTotal += grid[i, j];
+                colTotals[j] += grid[i, j];
+            }
+            Console.WriteLine($" {rowTotal,6}");
+            grandTotal += rowTotal;
+        }
+        Console.Write("Разом".PadRight(labelWidth));
+        int columnsTotal = 0;
+        for (int j = 0; j < cols; j++)
+        {
+            Console.Write($" {colTotals[j],5}");
+            columnsTotal += colTotals[j];
+        }
+        Console.WriteLine($" {grandTotal,6}");
+        Console.WriteLine($"Сума підсумків рядків: {grandTotal}; сума підсумків стовпців: {columnsTotal}.");
+        Console.WriteLine(grandTotal == columnsTotal ? "Підсумки збігаються." : "Помилка: підсумки не збігаються.");
     }
 
     private static void AddAthlete(int[] ids, string[] names, int[] birthYears, int[] sportIds,
