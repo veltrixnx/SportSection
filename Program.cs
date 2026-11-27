@@ -1340,16 +1340,18 @@ internal static class Program
 
         int nameWidth = "Прізвище та ім'я".Length;
         int rankWidth = "Розряд".Length;
+        int sportWidth = "Вид спорту".Length;
         for (int i = 0; i < count; i++)
         {
             if (names[i].Length > nameWidth) nameWidth = names[i].Length;
             if (ranks[i].Length > rankWidth) rankWidth = ranks[i].Length;
+            if (CategoryName(sportIds[i]).Length > sportWidth) sportWidth = CategoryName(sportIds[i]).Length;
         }
 
-        Console.WriteLine($"\n{ "№",4}  {"Прізвище та ім'я".PadRight(nameWidth)}  {"Рік",5}  {"Спорт",10}  {"Розряд".PadRight(rankWidth)}  {"Вступ",10}  {"Трен./тиж.",10}");
+        Console.WriteLine($"\n{ "№",4}  {"Прізвище та ім'я".PadRight(nameWidth)}  {"Рік",5}  {"Вид спорту".PadRight(sportWidth)}  {"Розряд".PadRight(rankWidth)}  {"Вступ",10}  {"Трен./тиж.",10}");
         for (int i = 0; i < count; i++)
         {
-            Console.WriteLine($"{ids[i],4}  {names[i].PadRight(nameWidth)}  {birthYears[i],5}  {sportIds[i],10}  {ranks[i].PadRight(rankWidth)}  {joinedDates[i]:dd.MM.yyyy}  {trainings[i],10}");
+            Console.WriteLine($"{ids[i],4}  {names[i].PadRight(nameWidth)}  {birthYears[i],5}  {CategoryName(sportIds[i]).PadRight(sportWidth)}  {ranks[i].PadRight(rankWidth)}  {joinedDates[i]:dd.MM.yyyy}  {trainings[i],10}");
         }
         Console.WriteLine($"Записів: {count}.");
         Console.WriteLine("Розподіл за віковими групами (приблизний вік: поточний рік мінус рік народження):");
@@ -1420,10 +1422,12 @@ internal static class Program
     {
         int nameWidth = "Прізвище та ім'я".Length;
         int rankWidth = "Розряд".Length;
+        int sportWidth = "Вид спорту".Length;
         for (int i = 0; i < count; i++)
         {
             if (names[i].Length > nameWidth) nameWidth = names[i].Length;
             if (ranks[i].Length > rankWidth) rankWidth = ranks[i].Length;
+            if (CategoryName(sportIds[i]).Length > sportWidth) sportWidth = CategoryName(sportIds[i]).Length;
         }
         int found = 0;
         for (int i = 0; i < count; i++)
@@ -1432,8 +1436,8 @@ internal static class Program
             bool matches = byName ? names[i].Contains(query) : birthYears[i] >= from && birthYears[i] <= to;
             if (!matches) continue;
             if (found == 0)
-                Console.WriteLine($"\n{"№",4}  {"Прізвище та ім'я".PadRight(nameWidth)}  {"Рік",5}  {"Спорт",10}  {"Розряд".PadRight(rankWidth)}  {"Вступ",10}  {"Трен./тиж.",10}");
-            Console.WriteLine($"{ids[i],4}  {names[i].PadRight(nameWidth)}  {birthYears[i],5}  {sportIds[i],10}  {ranks[i].PadRight(rankWidth)}  {joinedDates[i]:dd.MM.yyyy}  {trainings[i],10}");
+                Console.WriteLine($"\n{"№",4}  {"Прізвище та ім'я".PadRight(nameWidth)}  {"Рік",5}  {"Вид спорту".PadRight(sportWidth)}  {"Розряд".PadRight(rankWidth)}  {"Вступ",10}  {"Трен./тиж.",10}");
+            Console.WriteLine($"{ids[i],4}  {names[i].PadRight(nameWidth)}  {birthYears[i],5}  {CategoryName(sportIds[i]).PadRight(sportWidth)}  {ranks[i].PadRight(rankWidth)}  {joinedDates[i]:dd.MM.yyyy}  {trainings[i],10}");
             found++;
         }
         if (found == 0) Console.WriteLine("Записів за цією умовою не знайдено.");
